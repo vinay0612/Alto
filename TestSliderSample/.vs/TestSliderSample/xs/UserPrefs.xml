@@ -1,0 +1,24 @@
+﻿<Properties StartupConfiguration="{D03C9AB8-B0F1-4EAE-B0D1-467290544E16}|Default">
+  <MonoDevelop.Ide.ItemProperties.TestSliderSample.iOS automaticSigning="False" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneSimulatorTarget.F36F74DE-2D41-4AE0-B157-7799E5938A6C" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TestSliderSample/MainPage.xaml">
+    <Files>
+      <File FileName="TestSliderSample/CustomSlider.cs" Line="1" Column="1" IsPinned="True" />
+      <File FileName="TestSliderSample/MainPage.xaml" />
+      <File FileName="TestSliderSample.Android/Renderer/MySliderRenderer.cs" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="TestSliderSample" expanded="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.TestSliderSample.Android PreferredExecutionTarget="Android.pixel_2_pie_9_0_-_api_28" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
