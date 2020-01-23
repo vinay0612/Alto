@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using Android.Content;
 using Android.Content.Res;
 using Android.Graphics;
 using Android.Graphics.Drawables;
@@ -9,6 +10,7 @@ using TestSliderSample;
 using TestSliderSample.Droid.Renderer;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using static Android.Views.View;
 
 [assembly: ExportRenderer(typeof(CustomSlider), typeof(MySliderRenderer))]
 namespace TestSliderSample.Droid.Renderer
@@ -16,12 +18,14 @@ namespace TestSliderSample.Droid.Renderer
     [Obsolete]
     public class MySliderRenderer : SliderRenderer
     {
-        private CustomSlider view;
-        int currentSliderValue = 0;
-        bool IsDragging = false;
+        public CustomSlider view;
+        public int currentSliderValue = 0; 
         protected override void OnElementChanged(ElementChangedEventArgs<Slider> e)
         {
             base.OnElementChanged(e);
+            var seekBar = new ExtendedSlider(this.Context);
+            seekBar.mySliderRenderer = this;
+            SetNativeControl(seekBar);
             if (e.OldElement != null || e.NewElement == null)
                 return;
             view = (CustomSlider)Element;
@@ -35,55 +39,42 @@ namespace TestSliderSample.Droid.Renderer
                 newBitMap = Bitmap.CreateScaledBitmap(newBitMap, 150, 150, true);
                 Drawable newImg = new BitmapDrawable(newBitMap);
                 Control.SetThumb(newImg);
-
             }
             else if (view.ThumbColor != Xamarin.Forms.Color.Default ||
                 view.MaxColor != Xamarin.Forms.Color.Default ||
                 view.MinColor != Xamarin.Forms.Color.Default)
-            Control.Thumb.SetColorFilter(view.ThumbColor.ToAndroid(), PorterDuff.Mode.SrcIn);
+                Control.Thumb.SetColorFilter(view.ThumbColor.ToAndroid(), PorterDuff.Mode.SrcIn);
             Control.ProgressTintList = Android.Content.Res.ColorStateList.ValueOf(view.MinColor.ToAndroid());
             Control.ProgressTintMode = PorterDuff.Mode.SrcIn;
             //this is for Maximum Slider line Color  
             Control.ProgressBackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(view.MaxColor.ToAndroid());
             Control.ProgressBackgroundTintMode = PorterDuff.Mode.SrcIn;
+            Control.StopTrackingTouch += Control_StopTrackingTouch;
             currentSliderValue = Control.Progress;
             Control.Background = null;
-            //Control.SetOnTouchListener();
+                     
         }
 
-        public override bool OnTouchEvent(MotionEvent e)
+        private void Control_StopTrackingTouch(object sender, SeekBar.StopTrackingTouchEventArgs e)
         {
-
-            return true;
+            var percentage = Convert.ToDecimal((currentSliderValue).ToString());
+            var img = Resources.GetDrawable("VolumeKnob");
+            Bitmap bitmap = ((BitmapDrawable)img).Bitmap;
+            Bitmap newBitMap = DrawText(Convert.ToInt32(percentage).ToString() + "%", bitmap);
+            newBitMap = Bitmap.CreateScaledBitmap(newBitMap, 150, 150, true);
+            Drawable newImg = new BitmapDrawable(newBitMap);
+            Control.SetThumb(newImg);
         }
 
-        private void Control_Touch(object sender, TouchEventArgs e)
+        public void ChangeProgressValue()
         {
-            float prevX = float.MinValue;
-            float eps = 0.001f;
-            Drawable drawable = Control.Thumb;
-            if (e.Event.Action == MotionEventActions.Down)
-            {
-                if (e.Event.GetAxisValue(Axis.X) >= drawable.Bounds.Left && e.Event.GetAxisValue(Axis.X) <= drawable.Bounds.Right && e.Event.GetAxisValue(Axis.Y) >= drawable.Bounds.Top && e.Event.GetAxisValue(Axis.Y) <= drawable.Bounds.Bottom)
-                {
-                    prevX = e.Event.GetAxisValue(Axis.X);
-                    IsDragging = true;
-                }
-            }
-            if (e.Event.Action == MotionEventActions.Up)
-            {
-                if (e.Event.GetAxisValue(Axis.X) >= drawable.Bounds.Left && e.Event.GetAxisValue(Axis.X) <= drawable.Bounds.Right && e.Event.GetAxisValue(Axis.Y) >= drawable.Bounds.Top && e.Event.GetAxisValue(Axis.Y) <= drawable.Bounds.Bottom)
-                {
-                    if (Math.Abs(e.Event.GetAxisValue(Axis.X) - prevX) < eps)
-                    {
-                        Console.WriteLine("Clicked on place");
-                        IsDragging = false;
-                    }
-
-                    prevX = float.MinValue;
-                    return;
-                }
-            }
+            var percentage = Convert.ToDecimal((currentSliderValue).ToString());
+            var img = Resources.GetDrawable("VolumeKnobH");
+            Bitmap bitmap = ((BitmapDrawable)img).Bitmap;
+            Bitmap newBitMap = DrawText(Convert.ToInt32(percentage).ToString() + "%", bitmap);
+            newBitMap = Bitmap.CreateScaledBitmap(newBitMap, 150, 150, true);
+            Drawable newImg = new BitmapDrawable(newBitMap);
+            Control.SetThumb(newImg);
         }
 
         protected override void OnLayout(bool changed, int l, int t, int r, int b)
@@ -120,15 +111,11 @@ namespace TestSliderSample.Droid.Renderer
                 Drawable newImg = new BitmapDrawable(newBitMap);
                 Control.SetThumb(newImg);
             }
-            //IsDragging = true;
-            if (IsDragging == false)
-            {
-                Control.Progress = currentSliderValue;
-            }
+           
             currentSliderValue = Control.Progress;
         }
 
-        Bitmap DrawText(string text,Bitmap bitmap)
+       public Bitmap DrawText(string text,Bitmap bitmap)
         {
             Bitmap output = bitmap.Copy(Bitmap.Config.Argb8888, true);
             Canvas canvas = new Canvas(output);
@@ -139,15 +126,65 @@ namespace TestSliderSample.Droid.Renderer
             paint.Color = Android.Graphics.Color.White;
             paint.TextSize = 18f;
             paint.TextAlign = Paint.Align.Center;
-            //paint.SetXfermode(new PorterDuffXfermode(PorterDuff.Mode.SrcOver));
             canvas.DrawText(text, 35, 35, paint);
             return output;
         }
+
+        void SetSliderHieght(string pColor,string bgColor)
+        {
+            GradientDrawable p = new GradientDrawable();
+            p.SetCornerRadius(10);
+            p.SetColor(Android.Graphics.Color.DarkRed);
+            ClipDrawable progress = new ClipDrawable(p, GravityFlags.Left, ClipDrawable.Horizontal);
+            GradientDrawable background = new GradientDrawable();
+            background.SetColor(Android.Graphics.Color.Blue);
+            background.SetCornerRadius(10);
+            LayerDrawable pd = new LayerDrawable(new Drawable[] { background, progress});
+            Control.SetProgressDrawableTiled(pd);
+        }
    }
 
-    public class MyOnTouchListener : Java.Lang.Object, View.IOnTouchListener
+    public class ExtendedSlider : SeekBar
     {
-        
-    }
+        Drawable _drawable;
+        public MySliderRenderer mySliderRenderer;
+        public ExtendedSlider(Context context) : base(context)
+        {
+           
+        }
+        public override void SetThumb(Drawable thumb)
+        {
+            base.SetThumb(thumb);
+            _drawable = thumb;
+        }
 
+        public override bool OnTouchEvent(MotionEvent e)
+        {
+            Drawable drawable = _drawable;
+            
+            if (e.Action == MotionEventActions.Down)
+            {
+                Console.WriteLine(this.Progress);
+                if (e.GetAxisValue(Axis.X) <= drawable.Bounds.Left || e.GetAxisValue(Axis.X) >= drawable.Bounds.Right || e.GetAxisValue(Axis.Y) <= drawable.Bounds.Top || e.GetAxisValue(Axis.Y) >= drawable.Bounds.Bottom)
+                {
+                    //base.OnTouchEvent(e);
+                    return false;
+                }
+                
+            }
+            var progressValue = this.Min + (int)(this.Max * e.GetAxisValue(Axis.X) / this.Width);
+            if (progressValue < 0)
+            {
+                progressValue = 0;
+            }
+            if (progressValue > 100)
+            {
+                progressValue = 100;
+            }
+            mySliderRenderer.currentSliderValue = progressValue;//Convert.ToInt32(e.GetAxisValue(Axis.X)/10);
+            this.Progress = mySliderRenderer.currentSliderValue;
+            mySliderRenderer.ChangeProgressValue();
+            return  base.OnTouchEvent(e);
+        }
+    }
 }

@@ -113,10 +113,18 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon20.png">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\VolumeKnob.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\VolumeKnob.imageset\VolumeKnob.png" />
-    <ImageAsset Include="Assets.xcassets\VolumeKnobH.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\VolumeKnobH.imageset\VolumeKnob_H.png" />
+    <ImageAsset Include="Assets.xcassets\VolumeKnob.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\VolumeKnob.imageset\VolumeKnob.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\VolumeKnobH.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\VolumeKnobH.imageset\VolumeKnob_H.png">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

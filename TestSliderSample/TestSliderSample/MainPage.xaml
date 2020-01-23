@@ -9,7 +9,8 @@
       
         <StackLayout Margin="0,0" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
             <cs:CustomSlider Margin="20,0" x:Name="slider" MaxColor="Red" MinColor="Yellow"   
-                            ThumbColor="Black" ThumbImageIcon="VolumeKnob" />
+                             MaximumTrackColor="Red" MinimumTrackColor="Yellow"
+                            ThumbColor="Black" ThumbImageIcon="VolumeKnob"  />
         </StackLayout>
     </StackLayout>
 </ContentPage>

@@ -16,6 +16,7 @@ namespace TestSliderSample.iOS.Renderer
         protected override void OnElementChanged(ElementChangedEventArgs<Xamarin.Forms.Slider> e)
         {
             base.OnElementChanged(e);
+            SetNativeControl(new MySlideriOS());
             if (e.OldElement != null || e.NewElement == null)
                 return;
 
@@ -36,6 +37,7 @@ namespace TestSliderSample.iOS.Renderer
             Control.MinimumTrackTintColor = view.MinColor.ToUIColor();
             //this is for Maximum Slider line Color  
             Control.MaximumTrackTintColor = view.MaxColor.ToUIColor();
+            
         }
 
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -95,6 +97,20 @@ namespace TestSliderSample.iOS.Renderer
                 return UIImage.FromImage(ctx.ToImage());
             }
         }
+    }
+
+    public class MySlideriOS : UISlider
+    {
+        public MySlideriOS()
+        {
+           
+        }
+
+        //public override CGRect TrackRectForBounds(CGRect forBounds)
+        //{
+        //    CGRect rect = base.TrackRectForBounds(forBounds);
+        //    return new CGRect(rect.X, rect.Y, rect.Width, 20);
+        //}
     }
 
 }
